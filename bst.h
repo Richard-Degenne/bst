@@ -13,7 +13,6 @@
 #define _BST_H
 
 #include <stdlib.h>
-#include <stdio.h>
 
 
 /**
@@ -22,9 +21,8 @@
  * To work, the dataset of a BST must be <i>ordered</i>. This function type
  * must return an @c int : a positive number if the first argument is <i>greater
  * than</i> the second argument, and a negative number otherwise. A zero (0)
- * return value will be considered an equality, thus it will lead to the right
- * sub-tree while adding or removing nodes, and will also be considered a valid
- * result for a search.
+ * return value will be considered as <i>greater than</i>, and will also be
+ * considered a valid result for a search.
  *
  * \see bst_add
  * \see bst_remove
@@ -54,17 +52,17 @@ typedef void (*iterFun)(void *);
 /**
  * \brief 	Node structure
  *
- * This describes the structure of a node. The tree_node#data type is @c void*
+ * This describes the structure of a node. The bst_node#data type is @c void*
  * to be as generic as possible. See the bst structure for further details about
  * how is implemented the tree data type.
  *
  * \see 	bst
  */
-typedef struct _tree_node {
+typedef struct _bst_node {
 	void* data; 	/**< The node's data */
-	_tree_node left; 	/**< The node's left sub-tree */
-	_tree_node right; 	/**< The node's right sub-tree */
-} tree_node;
+	struct _bst_node* left; 	/**< The node's left sub-tree */
+	struct _bst_node* right; 	/**< The node's right sub-tree */
+} bst_node;
 
 
 /**
@@ -77,7 +75,7 @@ typedef struct _tree_node {
  */
 typedef struct {
 	size_t data_size; /**< Size of an element */
-	tree_node* root; /**< Root of the bst */
+	bst_node* root; /**< Root of the bst */
 	orderFun compare; /**< Binary relation of the tree dataset */
 	freeFun free; /**< Dynamic deallocation of tree data */
 } bst;
@@ -152,7 +150,7 @@ int bst_size(bst* tree);
  * \see 	bst#compare
  * \see 	orderFun
  * */
-tree_node* bst_search(bst* tree, void* element);
+bst_node* bst_search(bst* tree, void* element);
 
 
 /**
@@ -177,6 +175,13 @@ void bst_iter(bst* tree, iterFun function);
  * \param 	element 	Element to remove
  */
 void bst_remove(bst* tree, void* element);
+
+
+static void bst_destroy_rec(bst* tree, bst_node* current);
+static void bst_add_rec(bst* tree, bst_node* current, bst_node* new);
+static int bst_size_rec(bst_node* current);
+static bst_node* bst_search_rec(bst* tree, bst_node* current, void* element);
+static void bst_iter_rec(bst_node* current, iterFun function);
 
 
 #endif
