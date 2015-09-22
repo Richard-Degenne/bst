@@ -22,9 +22,11 @@
 /**
  * \brief 	Initializes a tree
  *
- * Use this function to initialize the tree attributes. Make sure you respect
+ * Use this function to create a new tree. Make sure you respect
  * the following conditions since some @c asserts are used to check the
  * parameters relevance.
+ * 
+ * To deallocate the tree, use @ref bst_destroy
  *
  * \param 	tree 	The tree to initialize
  * \param 	data_size 	The size of an element; must be > 0.
@@ -33,15 +35,22 @@
  *
  * \warning 	Breaking any of the above conditions will cause the program to
  * abort!
+ * \warning 	Not deallocating the tree with @ref bst_destroy will result in
+ * memory leaks!
+ *
+ * \see 	bst_destroy
  */
-void bst_new(bst* tree, size_t data_size, orderFun compare, freeFun free) {
+bst* bst_new(size_t data_size, orderFun compare, freeFun free) {
 	assert(data_size > 0);
 	assert(compare != NULL);
 
+	bst* tree = malloc(sizeof(bst));
 	tree->data_size = data_size;
 	tree->compare = compare;
 	tree->free = free;
 	tree->root = NULL;
+
+	return tree;
 }
 
 
@@ -67,7 +76,8 @@ static void bst_destroy_rec(bst* tree, bst_node* current) {
 		bst_destroy_rec(tree, current->left);
 	if(current->right)
 		bst_destroy_rec(tree, current->right);
-	tree->free(current->data);
+	if(tree->free)
+		tree->free(current->data);
 	free(current);
 }
 

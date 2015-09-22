@@ -96,7 +96,7 @@ typedef struct {
  * \warning 	Breaking any of the above conditions will cause the program to
  * abort!
  */
-void bst_new(bst* tree, size_t data_size, orderFun compare, freeFun free);
+bst* bst_new(size_t data_size, orderFun compare, freeFun free);
 
 
 /**
