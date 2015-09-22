@@ -40,7 +40,7 @@
  *
  * \see 	bst_destroy
  */
-bst* bst_new(size_t data_size, orderFun compare, freeFun free) {
+bst* bst_new(size_t data_size, orderFun compare, freeFun free_fun) {
 	assert(data_size > 0);
 	assert(compare != NULL);
 
@@ -49,7 +49,7 @@ bst* bst_new(size_t data_size, orderFun compare, freeFun free) {
 
 	tree->data_size = data_size;
 	tree->compare = compare;
-	tree->free = free;
+	tree->free = free_fun;
 	tree->root = NULL;
 
 	return tree;
