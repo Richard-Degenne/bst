@@ -79,10 +79,14 @@ static void bst_destroy_rec(bst* tree, bst_node* current) {
 		bst_destroy_rec(tree, current->left);
 	if(current->right)
 		bst_destroy_rec(tree, current->right);
+	bst_destroy_node(tree, current);
+}
+
+static void bst_destroy_node(bst* tree, bst_node* node) {
 	if(tree->free)
-		tree->free(current->data);
-	free(current->data);
-	free(current);
+		tree->free(node->data);
+	free(node->data);
+	free(node);
 }
 
 
@@ -218,4 +222,45 @@ static void bst_iter_rec(bst_node* current, iterFun function) {
  */
 void bst_remove(bst* tree, void* element) {
 	assert(tree);
+	if(tree->root)
+		bst_remove_rec(tree, tree->root, element);
+}
+
+static bst_node* bst_remove_rec(bst* tree, bst_node* current, void* element) {
+	if(!current)
+		return NULL;
+	if(tree->compare(current->data, element) > 0)
+		current->left = bst_remove_rec(tree, current->left, element);
+	else if(tree->compare(current->data, element) < 0)
+		current->right = bst_remove_rec(tree, current->right, element);
+	else {
+		if(!current->left && !current->right) { // No children
+			bst_destroy_node(tree, current);
+			return NULL;
+		}
+		else if(!current->right) { // Only a left child
+			bst_node* temp = current->left;
+			bst_destroy_node(tree, current);
+			return temp;
+		}
+		else if(!current->left) { // Only a right child
+			bst_node* temp = current->right;
+			bst_destroy_node(tree, current);
+			return temp;
+		}
+		else { // Left and right children
+			bst_node* successor = find_max(current->left);
+			printf("Successor: %d\n", *((int*)successor->data));
+			memcpy(current->data, successor->data, tree->data_size);
+			printf("New current: %d\n", *((int*)current->data));
+			current->left = bst_remove_rec(tree, current->left, successor->data);
+		}
+	}
+	return current;
+}
+
+static bst_node* find_max(bst_node* current) {
+	if(!current->right)
+		return current;
+	return find_max(current->right);
 }
