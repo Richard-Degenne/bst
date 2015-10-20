@@ -180,6 +180,7 @@ void bst_remove(bst* tree, void* element);
 static void bst_destroy_rec(bst* tree, bst_node* current);
 static void bst_destroy_node(bst* tree, bst_node* node);
 static void bst_add_rec(bst* tree, bst_node* current, bst_node* new);
+static bst_node* bst_create_node(int data_size, void* element);
 static int bst_size_rec(bst_node* current);
 static bst_node* bst_search_rec(bst* tree, bst_node* current, void* element);
 static void bst_iter_rec(bst_node* current, iterFun function);

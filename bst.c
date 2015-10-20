@@ -45,7 +45,8 @@ bst* bst_new(size_t data_size, orderFun compare, freeFun free_fun) {
 	assert(compare != NULL);
 
 	bst* tree = malloc(sizeof(bst));
-	assert(tree);
+	if(!tree)
+		perror("malloc");
 
 	tree->data_size = data_size;
 	tree->compare = compare;
@@ -100,14 +101,9 @@ static void bst_destroy_node(bst* tree, bst_node* node) {
  * \param 	element 	The new node's data
  */
 void bst_add(bst* tree, void* element) {
+	assert(tree);
 	// Creating the new node
-	bst_node* node = malloc(sizeof(bst_node)); // Allocating a node
-	assert(node);
-	node->data = malloc(tree->data_size); // Allocating data
-	assert(node->data);
-	memcpy(node->data, element, tree->data_size); // Setting data
-	node->left = NULL;
-	node->right = NULL;
+	bst_node* node = bst_create_node(tree->data_size, element);
 
 	if(tree->root)
 		bst_add_rec(tree, tree->root, node); // Start recursion
@@ -129,6 +125,19 @@ static void bst_add_rec(bst* tree, bst_node* current, bst_node* new) {
 			bst_add_rec(tree, current->right, new);
 }
 
+static bst_node* bst_create_node(int data_size, void* element) {
+	bst_node* node = malloc(sizeof(bst_node)); // Allocating a node
+	if(!node)
+		perror("malloc");
+	node->data = malloc(data_size); // Allocating data
+	if(!(node->data))
+		perror("malloc");
+	memcpy(node->data, element, data_size); // Setting data
+	node->left = NULL;
+	node->right = NULL;
+
+	return node;
+}
 
 
 /**
@@ -250,9 +259,7 @@ static bst_node* bst_remove_rec(bst* tree, bst_node* current, void* element) {
 		}
 		else { // Left and right children
 			bst_node* successor = find_max(current->left);
-			printf("Successor: %d\n", *((int*)successor->data));
 			memcpy(current->data, successor->data, tree->data_size);
-			printf("New current: %d\n", *((int*)current->data));
 			current->left = bst_remove_rec(tree, current->left, successor->data);
 		}
 	}
