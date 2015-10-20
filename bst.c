@@ -106,23 +106,23 @@ void bst_add(bst* tree, void* element) {
 	bst_node* node = bst_create_node(tree->data_size, element);
 
 	if(tree->root)
-		bst_add_rec(tree, tree->root, node); // Start recursion
+		bst_add_rec(tree->compare, tree->root, node); // Start recursion
 	else {
 		tree->root = node; // Setting the new node as the tree's root
 	}
 }
 
-static void bst_add_rec(bst* tree, bst_node* current, bst_node* new) {
-	if(tree->compare(current->data, new->data) >= 0) // current >= new
+static void bst_add_rec(orderFun compare, bst_node* current, bst_node* new) {
+	if(compare(current->data, new->data) >= 0) // current >= new
 		if(!current->left) // current->left == NULL
 			current->left = new;
 		else 
-			bst_add_rec(tree, current->left, new);
+			bst_add_rec(compare, current->left, new);
 	else // current < new
 		if(!current->right)
 			current->right = new;
 		else
-			bst_add_rec(tree, current->right, new);
+			bst_add_rec(compare, current->right, new);
 }
 
 static bst_node* bst_create_node(int data_size, void* element) {
@@ -180,17 +180,17 @@ static int bst_size_rec(bst_node* current) {
 bst_node* bst_search(bst* tree, void* element) {
 	assert(tree);
 	if(tree->root)
-		return bst_search_rec(tree, tree->root, element);
+		return bst_search_rec(tree->compare, tree->root, element);
 	return NULL;
 }
 
-static bst_node* bst_search_rec(bst* tree, bst_node* current, void* element) {
+static bst_node* bst_search_rec(orderFun compare, bst_node* current, void* element) {
 	if(!current)
 		return NULL;
-	if(tree->compare(current->data, element) > 0) // current > element
-		bst_search_rec(tree, current->left, element);
-	else if(tree->compare(current->data, element) < 0)  // current < element
-		bst_search_rec(tree, current->right, element);
+	if(compare(current->data, element) > 0) // current > element
+		bst_search_rec(compare, current->left, element);
+	else if(compare(current->data, element) < 0)  // current < element
+		bst_search_rec(compare, current->right, element);
 	else
 		return current;
 }
