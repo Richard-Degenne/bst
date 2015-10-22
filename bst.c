@@ -19,30 +19,9 @@
 #include "bst.h"
 
 
-/**
- * \brief 	Initializes a tree
- *
- * Use this function to create a new tree. Make sure you respect
- * the following conditions since some @c asserts are used to check the
- * parameters relevance.
- * 
- * To deallocate the tree, use @ref bst_destroy
- *
- * \param 	tree 	The tree to initialize
- * \param 	data_size 	The size of an element; must be > 0.
- * \param 	orderFun 	The tree's binary relation; cannot be @c NULL.
- * \param 	freeFun 	The tree's data freeing function; can be NULL.
- *
- * \warning 	Breaking any of the above conditions will cause the program to
- * abort!
- * \warning 	Not deallocating the tree with @ref bst_destroy will result in
- * memory leaks!
- *
- * \see 	bst_destroy
- */
 bst* bst_new(size_t data_size, orderFun compare, freeFun free_fun) {
 	assert(data_size > 0);
-	assert(compare != NULL);
+	assert(compare);
 
 	bst* tree = malloc(sizeof(bst));
 	if(!tree)
@@ -57,17 +36,6 @@ bst* bst_new(size_t data_size, orderFun compare, freeFun free_fun) {
 }
 
 
-/**
- * \brief 	Destroys a tree
- *
- * A call to bst_destroy deallocates a tree and all its nodes by calling
- * bst#free. Make sure the program calls it when the tree is not needed anymore.
- *
- * \param 	tree 	The tree to deallocate. Cannot be @c NULL.
- *
- * \warning 	Not using this function to deallocate a bst will cause memory
- * leaks!
- * */
 void bst_destroy(bst* tree) {
 	assert(tree);
 	if(tree->root)
@@ -91,17 +59,10 @@ static void bst_destroy_node(bst* tree, bst_node* node) {
 }
 
 
-/**
- * \brief 	Adds a new node to a tree
- *
- * Calling this function dynamically allocates a new node and inserts it into
- * the binary search tree.
- *
- * \param 	tree 	The tree to insert the new node into. Cannot be @c NULL
- * \param 	element 	The new node's data
- */
 void bst_add(bst* tree, void* element) {
 	assert(tree);
+	assert(element);
+
 	// Creating the new node
 	bst_node* node = bst_create_node(tree->data_size, element);
 
@@ -140,13 +101,6 @@ static bst_node* bst_create_node(int data_size, void* element) {
 }
 
 
-/**
- * \brief 	Computes the size of a tree
- *
- * \param 	tree 	Tree to compute. Cannot be @c NULL.
- *
- * \return 	The number of elements in the tree
- */
 int bst_size(bst* tree) {
 	assert(tree);
 	if(tree->root)
@@ -162,21 +116,6 @@ static int bst_size_rec(bst_node* current) {
 }
 
 
-/**
- * \brief 	Searches a tree
- *
- * Searches tree for element. A node is considered a result whenever bst#compare
- * returns 0.
- *
- * \param 	tree 	The tree to search. Cannot be @c NULL.
- * \param 	element 	The element to search for
- *
- * \return 	A pointer to the node element was found, @c NULL if element
- * couldn't be found.
- *
- * \see 	bst#compare
- * \see 	orderFun
- * */
 bst_node* bst_search(bst* tree, void* element) {
 	assert(tree);
 	if(tree->root)
@@ -196,14 +135,6 @@ static bst_node* bst_search_rec(orderFun compare, bst_node* current, void* eleme
 }
 
 
-/**
- * \brief 	Iterates over a tree
- *
- * Applies a function to every element in the tree.
- *
- * \param 	tree 	The tree to iterate over. Cannot be @c NULL.
- * \param 	function 	The function to apply. Cannont be @c NULL.
- */
 void bst_iter(bst* tree, iterFun function) {
 	assert(tree);
 	assert(function);
@@ -219,16 +150,7 @@ static void bst_iter_rec(bst_node* current, iterFun function) {
 	bst_iter_rec(current->right, function);
 }
 
-/**
- * \brief 	Removes an element
- *
- * Removes a node (using bst#free to dynamically deallocate the node's data if
- * needed), and restores the tree structure. If there are several occurences of
- * element in tree, only the lowest-depth one will be removed.
- * 
- * \param 	tree 	Tree to remove element. Cannot be @c NULL.
- * \param 	element 	Element to remove
- */
+
 void bst_remove(bst* tree, void* element) {
 	assert(tree);
 	if(tree->root)

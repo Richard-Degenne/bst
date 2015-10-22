@@ -88,15 +88,16 @@ typedef struct {
  * the following conditions since some @c asserts are used to check the
  * parameters relevance.
  *
- * \param 	tree 	The tree to initialize
  * \param 	data_size 	The size of an element; must be > 0.
- * \param 	orderFun 	The tree's binary relation; cannot be @c NULL.
- * \param 	freeFun 	The tree's data freeing function; can be NULL.
+ * \param 	compare 	The tree's binary relation; cannot be @c NULL.
+ * \param 	free_fun 	The tree's data freeing function; can be NULL.
+ *
+ * \return 	A pointer to the_newly-allocated tree.
  *
  * \warning 	Breaking any of the above conditions will cause the program to
  * abort!
  */
-bst* bst_new(size_t data_size, orderFun compare, freeFun free);
+bst* bst_new(size_t data_size, orderFun compare, freeFun free_fun);
 
 
 /**
@@ -119,8 +120,11 @@ void bst_destroy(bst* tree);
  * Calling this function dynamically allocates a new node and inserts it into
  * the binary search tree.
  *
- * \param 	tree 	The tree to insert the new node into
- * \param 	element 	The new node's data
+ * \param 	tree 	The tree to insert the new node into. Cannot be @c NULL
+ * \param 	element 	The new node's data. Cannot be @c NULL
+ *
+ * \warning 	Breaking any of the above conditions will cause the program to
+ * abort!
  */
 void bst_add(bst* tree, void* element);
 

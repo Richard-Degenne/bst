@@ -10,6 +10,12 @@ This simple library is a C implementation of binary search trees. It is used
 as an example for an article on Zeste de Savoir, a French knowledge-sharing
 website.
 
+Need help?
+----------
+
+Should you need some help using the library, open `doc.html` in your favorite
+web browser. It contains a fairly complete documentation.
+
 License
 -------
 

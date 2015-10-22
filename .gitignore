@@ -2,10 +2,15 @@
 
 !*.c
 !*.h
+!*.html
+!*.js
+
 !README.md
 !license
 !makefile
 !.gitignore
+!doc
+!doc/**
 
 main.c
 
