@@ -24,8 +24,10 @@ bst* bst_new(size_t data_size, orderFun compare, freeFun free_fun) {
 	assert(compare);
 
 	bst* tree = malloc(sizeof(bst));
-	if(!tree)
+	if(!tree) {
 		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
 
 	tree->data_size = data_size;
 	tree->compare = compare;
@@ -88,11 +90,15 @@ static void bst_add_rec(orderFun compare, bst_node* current, bst_node* new) {
 
 static bst_node* bst_create_node(int data_size, void* element) {
 	bst_node* node = malloc(sizeof(bst_node)); // Allocating a node
-	if(!node)
+	if(!node) {
 		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
 	node->data = malloc(data_size); // Allocating data
-	if(!(node->data))
+	if(!(node->data)) {
 		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
 	memcpy(node->data, element, data_size); // Setting data
 	node->left = NULL;
 	node->right = NULL;
